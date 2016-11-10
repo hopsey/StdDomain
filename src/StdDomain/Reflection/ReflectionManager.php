@@ -9,7 +9,7 @@
 namespace StdDomain\Reflection;
 
 /**
- *
+ * TODO zaimplementowac storage na cache - na teraz niepotrzebne
  * Class ReflectionManager
  * @package KontomatikApi\Reflection
  */
