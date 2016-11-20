@@ -34,7 +34,11 @@ class EntityFactory
             }
             $value = @$data[$name];
 
-            if (self::implementsVOInterface((string)$type)) {
+            if (!self::implementsVOInterface((string)$type)
+                || (is_object($value) && get_class($value) == (string)$type)
+            ) {
+                $invokeArguments[$name] = $value;
+            } else {
                 try {
                     $builtVo = null;
                     $invokeArguments[$name] = $property->isDefaultValueAvailable() && $property->getDefaultValue() === null && $value === null ? null :
@@ -45,8 +49,6 @@ class EntityFactory
                 } catch (ValueObjectBuildException $e) {
                     $errors->registerError($name, 'buildError', 'You are required to supply full data in order to create single property');
                 }
-            } else {
-                $invokeArguments[$name] = $value;
             }
         }
 
