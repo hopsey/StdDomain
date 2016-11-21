@@ -8,7 +8,7 @@
 
 namespace StdDomain\ValueObject;
 
-use MabeEnum\Enum;
+use MabeEnum\Enum as MEnum;
 use StdDomain\Reflection\ReflectionManager;
 use StdDomain\ValueObject\Factory\ValueObjectBuilderError;
 
@@ -57,7 +57,7 @@ class Factory
 
         try {
             // wyjatkowo inaczej dla enumow
-            if (ReflectionManager::getReflectedClass($valueObjectClass)->isSubclassOf(Enum::class)) {
+            if (ReflectionManager::getReflectedClass($valueObjectClass)->isSubclassOf(MEnum::class)) {
                 $result = $valueObjectClass::fromNative(current($invokeParams));
             } else {
                 $result = ReflectionManager::getReflectedClass($valueObjectClass)->newInstanceArgs($invokeParams);
