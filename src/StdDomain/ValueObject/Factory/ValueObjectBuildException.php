@@ -1,6 +1,6 @@
 <?php
 
-namespace StdDomain\ValueObject;
+namespace StdDomain\ValueObject\Factory;
 
 
 class ValueObjectBuildException extends \Exception
