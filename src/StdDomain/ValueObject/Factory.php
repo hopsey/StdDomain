@@ -11,6 +11,7 @@ namespace StdDomain\ValueObject;
 use MabeEnum\Enum as MEnum;
 use StdDomain\Reflection\ReflectionManager;
 use StdDomain\ValueObject\Factory\ValueObjectBuilderError;
+use StdDomain\ValueObject\Factory\ValueObjectBuildException;
 
 class Factory
 {
