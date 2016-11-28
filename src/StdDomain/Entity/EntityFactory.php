@@ -57,7 +57,7 @@ class EntityFactory
 
     public static function build($entityClass, array $data, ValueObjectBuilderError $errors = null)
     {
-        ReflectionManager::getReflectedClass($entityClass)->newInstanceArgs(self::buildParams($entityClass, $data, $errors));
+        return ReflectionManager::getReflectedClass($entityClass)->newInstanceArgs(self::buildParams($entityClass, $data, $errors));
     }
 
     public function prepareAndInvoke($entityClass, $invokeArguments)
