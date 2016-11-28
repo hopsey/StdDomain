@@ -9,8 +9,8 @@
 namespace StdDomain\Entity;
 
 use StdDomain\Reflection\ReflectionManager;
+use StdDomain\ValueObject\Factory;
 use StdDomain\ValueObject\Factory\ValueObjectBuilderError;
-use StdDomain\ValueObject\ValueObjectBuildException;
 
 class EntityFactory
 {
@@ -21,7 +21,7 @@ class EntityFactory
         return strpos($className, "\\ValueObject\\") === false ? false : true;
     }
 
-    public static function build($entityClass, array $data, ValueObjectBuilderError $errors = null, $dontInvoke = false)
+    public static function buildParams($entityClass, array $data, ValueObjectBuilderError $errors = null)
     {
         $properties = ReflectionManager::getReflectedConstructorParams($entityClass);
         $invokeArguments = [];
@@ -29,9 +29,6 @@ class EntityFactory
         foreach ($properties as $property) {
             $name = $property->getName();
             $type = $property->getType();
-            if (!array_key_exists($name, $data) && $dontInvoke) {
-                continue;
-            }
             $value = @$data[$name];
 
             if (!self::implementsVOInterface((string)$type)
@@ -42,11 +39,11 @@ class EntityFactory
                 try {
                     $builtVo = null;
                     $invokeArguments[$name] = $property->isDefaultValueAvailable() && $property->getDefaultValue() === null && $value === null ? null :
-                        ($builtVo = \StdDomain\ValueObject\Factory::build($type, $value, $errors, $name));
+                        ($builtVo = Factory::build($type, $value, $errors, $name));
                     if ($builtVo === false) {
                         $isError = true;
                     }
-                } catch (ValueObjectBuildException $e) {
+                } catch (Factory\ValueObjectBuildException $e) {
                     $errors->registerError($name, 'buildError', 'You are required to supply full data in order to create single property');
                 }
             }
@@ -55,8 +52,12 @@ class EntityFactory
         if ($isError) {
             return false;
         }
-        return $dontInvoke === true ? $invokeArguments :
-            ReflectionManager::getReflectedClass($entityClass)->newInstanceArgs($invokeArguments);
+        return $invokeArguments;
+    }
+
+    public static function build($entityClass, array $data, ValueObjectBuilderError $errors = null)
+    {
+        ReflectionManager::getReflectedClass($entityClass)->newInstanceArgs(self::buildParams($entityClass, $data, $errors));
     }
 
     public function prepareAndInvoke($entityClass, $invokeArguments)
