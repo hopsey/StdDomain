@@ -11,7 +11,7 @@ namespace StdDomain\Entity;
 
 abstract class AbstractAggregate implements AggregateInterface
 {
-    private $aggregateItems = [];
+    protected $aggregateItems = [];
 
     abstract public function getAggregateElementClass();
 
