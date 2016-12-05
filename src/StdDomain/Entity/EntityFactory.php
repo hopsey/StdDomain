@@ -25,13 +25,18 @@ class EntityFactory
         return ReflectionManager::isSubclassOf($className, AggregateInterface::class);
     }
 
-    public static function buildParams($entityClass, array $data, ValueObjectBuilderError $errors = null)
+    public static function buildParams($entityClass, array $data, ValueObjectBuilderError $errors = null, $ignoreNotExisting = false)
     {
         $properties = ReflectionManager::getReflectedConstructorParams($entityClass);
         $invokeArguments = [];
         $isError = false;
         foreach ($properties as $property) {
             $name = $property->getName();
+
+            if ($ignoreNotExisting === true && !array_key_exists($name, $data)) {
+                continue;
+            }
+
             $type = $property->getType();
             $value = @$data[$name];
 
