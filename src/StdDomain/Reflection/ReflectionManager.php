@@ -28,9 +28,9 @@ class ReflectionManager
         if (is_object($className)) {
             $className = get_class($className);
         }
-        if (!class_exists($className)) {
-            throw new \InvalidArgumentException("Entity class " . $className . " does not exist");
-        }
+//        if (!class_exists($className)) {
+//            throw new \InvalidArgumentException("Entity class " . $className . " does not exist");
+//        }
 
         if (!array_key_exists($className, self::$reflectedEntities)) {
             $class = self::$reflectedEntities[$className] = new \ReflectionClass($className);
