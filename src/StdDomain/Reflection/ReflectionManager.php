@@ -17,6 +17,8 @@ class ReflectionManager
 {
     private static $reflectedEntities = [];
 
+    private static $subclassMap = [];
+
     /**
      * @param $className
      * @return array
@@ -33,7 +35,7 @@ class ReflectionManager
         if (!array_key_exists($className, self::$reflectedEntities)) {
             $class = self::$reflectedEntities[$className] = new \ReflectionClass($className);
             $constructor = $class->getConstructor();
-            $parameters = $constructor->getParameters();
+            $parameters = $constructor === null ? null : $constructor->getParameters();
             $properties = $class->getProperties();
 
             self::$reflectedEntities[$className] = [
@@ -80,5 +82,14 @@ class ReflectionManager
     public static function getReflectedProperties($className)
     {
         return self::loadCache($className)['properties'];
+    }
+
+    public static function isSubclassOf($class, $subclass)
+    {
+        if (!isset(self::$subclassMap[$class][$subclass])) {
+            self::$subclassMap[$class][$subclass] =
+                self::getReflectedClass($class)->isSubclassOf($subclass);
+        }
+        return self::$subclassMap[$class][$subclass];
     }
 }

@@ -11,14 +11,18 @@ namespace StdDomain\Entity;
 use StdDomain\Reflection\ReflectionManager;
 use StdDomain\ValueObject\Factory;
 use StdDomain\ValueObject\Factory\ValueObjectBuilderError;
+use StdDomain\ValueObject\ValueObjectInterface;
 
 class EntityFactory
 {
     private static function implementsVOInterface($className)
     {
-        // for performance reasons nie skorzystamy z introspekcji,
-        // tylko sprawdzamy czy namespace zawiera ValueObject
-        return strpos($className, "\\ValueObject\\") === false ? false : true;
+        return ReflectionManager::isSubclassOf($className, ValueObjectInterface::class);
+    }
+
+    private static function implementsAggregateInterface($className)
+    {
+        return ReflectionManager::isSubclassOf($className, AggregateInterface::class);
     }
 
     public static function buildParams($entityClass, array $data, ValueObjectBuilderError $errors = null)
@@ -31,10 +35,20 @@ class EntityFactory
             $type = $property->getType();
             $value = @$data[$name];
 
-            if (!self::implementsVOInterface((string)$type)
+            if ((!self::implementsVOInterface((string)$type) && !(self::implementsAggregateInterface((string)$type)))
                 || (is_object($value) && get_class($value) == (string)$type)
             ) {
                 $invokeArguments[$name] = $value;
+            } elseif(self::implementsAggregateInterface((string)$type)) {
+                /** @var AggregateInterface $aggregate */
+                $typeStr = (string)$type;
+                $aggregate = new $typeStr;
+                if (is_array($value) && count($value) > 0) {
+                    foreach ($value as $row) {
+                        $aggregate->addItem(self::build($aggregate->getAggregateElementClass(), $row));
+                    }
+                }
+                $invokeArguments[$name] = $aggregate;
             } else {
                 try {
                     $builtVo = null;

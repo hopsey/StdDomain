@@ -13,7 +13,7 @@ abstract class AbstractAggregate implements AggregateInterface
 {
     protected $aggregateItems = [];
 
-    abstract public function getAggregateElementClass();
+    abstract public function getAggregateElementClass(): string;
 
     public function addItem(EntityInterface $item)
     {

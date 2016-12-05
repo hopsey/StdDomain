@@ -36,4 +36,9 @@ trait ValueObjectTrait
     {
         return $this->toNative();
     }
+
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
 }
