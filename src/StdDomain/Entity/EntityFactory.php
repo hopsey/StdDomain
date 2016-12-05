@@ -44,8 +44,24 @@ class EntityFactory
                 $typeStr = (string)$type;
                 $aggregate = new $typeStr;
                 if (is_array($value) && count($value) > 0) {
-                    foreach ($value as $row) {
-                        $aggregate->addItem(self::build($aggregate->getAggregateElementClass(), $row));
+                    foreach ($value as $rowKey => $row) {
+                        if (!is_array($row)) {
+                            continue;
+                        }
+                        $subErrors = new ValueObjectBuilderError();
+                        $built = self::buildParams($aggregate->getAggregateElementClass(), $row, $subErrors);
+
+                        if ($subErrors->hasRegisteredErrors()) {
+                            foreach ($subErrors->getRegisteredErrors() as $namespace => $errorsObj) {
+                                foreach ($errorsObj as $errorCode => $errorDesc) {
+                                    $errors->registerError($name . "__" . $rowKey . "__" . $namespace, $errorCode, $errorDesc);
+                                }
+                            }
+                        }
+
+                        if ($built instanceof EntityInterface) {
+                            $aggregate->addItem($built);
+                        }
                     }
                 }
                 $invokeArguments[$name] = $aggregate;

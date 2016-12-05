@@ -25,6 +25,16 @@ class ValueObjectBuilderError
         $this->namespaces[$namespace][$code] = $message;
     }
 
+    public function hasRegisteredErrors()
+    {
+        return count($this->namespaces) > 0;
+    }
+
+    public function getRegisteredErrors()
+    {
+        return $this->namespaces;
+    }
+
     public function toArray()
     {
         if (count($this->namespaces) == 0) {
