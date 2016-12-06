@@ -64,8 +64,9 @@ class EntityFactory
                             }
                         }
 
-                        if ($built instanceof EntityInterface) {
-                            $aggregate->addItem($built);
+                        $builtInstance = self::buildFromParams($aggregate->getAggregateElementClass(), $built);
+                        if ($builtInstance instanceof EntityInterface) {
+                            $aggregate->addItem($builtInstance);
                         }
                     }
                 }
