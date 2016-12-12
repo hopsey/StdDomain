@@ -38,9 +38,7 @@ class Factory
 
         foreach ($params as $param) {
             $paramName = $param->getName();
-            if (isset($argsRefined[$paramName]) && $argsRefined[$paramName] === false) {
-                continue;
-            }
+            $allowsNull = isset($argsRefined[$paramName]) ? !$argsRefined[$paramName] : $param->allowsNull();
             if (is_array($data)) {
                 if (array_key_exists($paramName, $data)) {
                     $value = $data[$paramName];
@@ -52,6 +50,11 @@ class Factory
             }
 
             $paramType = ($param->getType() === null ? null : (string)$param->getType());
+
+            if ($allowsNull && empty($value)) {
+                $invokeParams[] = null;
+                continue;
+            }
 
             $invokeParams[] = ($paramType === null ? $value : self::build($paramType, $value, $error, $namespace . "__" . $paramName));
         }
