@@ -97,6 +97,12 @@ class EntityFactory
         return $invokeArguments;
     }
 
+    /**
+     * @param $entityClass
+     * @param array $data
+     * @param ValueObjectBuilderError|null $errors
+     * @return mixed
+     */
     public static function build($entityClass, array $data, ValueObjectBuilderError $errors = null)
     {
         return self::buildFromParams($entityClass, self::buildParams($entityClass, $data, $errors));
