@@ -40,7 +40,7 @@ class EntityFactory
             $type = $property->getType();
             $value = @$data[$name];
 
-            if ((!self::implementsVOInterface((string)$type) && !(self::implementsAggregateInterface((string)$type)))
+            if ((string)$type == "" || (!self::implementsVOInterface((string)$type) && !(self::implementsAggregateInterface((string)$type)))
                 || (is_object($value) && get_class($value) == (string)$type)
             ) {
                 $invokeArguments[$name] = $value;
