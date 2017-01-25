@@ -30,6 +30,15 @@ abstract class AbstractAggregate implements AggregateInterface
         return count($this->aggregateItems);
     }
 
+    public function getElement($key)
+    {
+        if (!array_key_exists($key, $this->aggregateItems)) {
+            throw new \DomainException("Element not found on position " . $key);
+        }
+
+        return $this->aggregateItems[$key];
+    }
+
     public function getIterator()
     {
         return new \ArrayIterator($this->aggregateItems);
