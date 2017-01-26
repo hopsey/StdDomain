@@ -51,7 +51,7 @@ class Factory
 
             $paramType = ($param->getType() === null ? null : (string)$param->getType());
 
-            if ($allowsNull && ($value === null)) {
+            if ($allowsNull && empty($value) && $value !== 0) {
                 $invokeParams[] = null;
                 continue;
             }
