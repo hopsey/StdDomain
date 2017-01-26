@@ -34,7 +34,7 @@ trait ValueObjectTrait
      */
     public function __toString()
     {
-        return $this->toNative();
+        return (string)$this->toNative();
     }
 
     public function __construct($value)
