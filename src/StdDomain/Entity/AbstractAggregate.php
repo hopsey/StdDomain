@@ -25,6 +25,9 @@ abstract class AbstractAggregate implements AggregateInterface
         $this->aggregateItems[] = $item;
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return count($this->aggregateItems);
