@@ -39,6 +39,16 @@ abstract class AbstractAggregate implements AggregateInterface
         return $this->aggregateItems[$key];
     }
 
+    public function getLast()
+    {
+        return end($this->aggregateItems);
+    }
+
+    public function getFirst()
+    {
+        return reset($this->aggregateItems);
+    }
+
     public function getIterator()
     {
         return new \ArrayIterator($this->aggregateItems);
