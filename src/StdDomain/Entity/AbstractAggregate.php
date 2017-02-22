@@ -30,6 +30,9 @@ abstract class AbstractAggregate implements AggregateInterface
         return count($this->aggregateItems);
     }
 
+    /**
+     * @return mixed
+     */
     public function getElement($key)
     {
         if (!array_key_exists($key, $this->aggregateItems)) {
@@ -39,11 +42,17 @@ abstract class AbstractAggregate implements AggregateInterface
         return $this->aggregateItems[$key];
     }
 
+    /**
+     * @return mixed
+     */
     public function getLast()
     {
         return end($this->aggregateItems);
     }
 
+    /**
+     * @return mixed
+     */
     public function getFirst()
     {
         return reset($this->aggregateItems);
