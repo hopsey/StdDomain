@@ -27,4 +27,10 @@ interface AggregateInterface extends \IteratorAggregate, \Countable
      * @return bool
      */
     public function addItem(EntityInterface $item);
+
+    /**
+     * Usuwa wszystkie elementy
+     * @return mixed
+     */
+    public function purge();
 }

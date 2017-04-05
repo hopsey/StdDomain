@@ -65,4 +65,9 @@ abstract class AbstractAggregate implements AggregateInterface
     {
         return new \ArrayIterator($this->aggregateItems);
     }
+
+    public function purge()
+    {
+        $this->aggregateItems = [];
+    }
 }
