@@ -2,6 +2,7 @@
 
 namespace StdDomain\Hydrator;
 
+use StdDomain\Entity\AggregateInterface;
 use StdDomain\Reflection\ReflectionManager;
 use StdDomain\ValueObject\ValueObjectInterface;
 use Zend\Hydrator\HydratorInterface;
@@ -25,6 +26,13 @@ class ValueObject implements HydratorInterface
             $reflectionProperty->setAccessible(true);
             if (($value = $reflectionProperty->getValue($object)) instanceof ValueObjectInterface) {
                 $rows[$reflectionProperty->getName()] = $value->toNative();
+            }
+
+            if (($value = $reflectionProperty->getValue($object)) instanceof AggregateInterface) {
+                $rows[$reflectionProperty->getName()] = [];
+                foreach ($reflectionProperty->getValue($object) as $item) {
+                    $rows[$reflectionProperty->getName()][] = $item;
+                }
             }
         }
         return $rows;
