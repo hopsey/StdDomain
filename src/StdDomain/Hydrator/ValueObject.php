@@ -31,7 +31,7 @@ class ValueObject implements HydratorInterface
             if (($value = $reflectionProperty->getValue($object)) instanceof AggregateInterface) {
                 $rows[$reflectionProperty->getName()] = [];
                 foreach ($reflectionProperty->getValue($object) as $item) {
-                    $rows[$reflectionProperty->getName()][] = $item;
+                    $rows[$reflectionProperty->getName()][] = self::extract($item);
                 }
             }
         }
